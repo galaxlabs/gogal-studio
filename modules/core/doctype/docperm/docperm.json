@@ -1,0 +1,187 @@
+{
+  "name": "DocPerm",
+  "module": "Core",
+  "label": "DocPerm",
+  "table_name": "core_docperm",
+  "is_core": true,
+  "is_single": false,
+  "is_submittable": false,
+  "is_tree": false,
+  "is_child_table": true,
+  "allow_import": true,
+  "allow_export": true,
+  "track_changes": true,
+  "editable_grid": true,
+  "quick_entry": false,
+  "controller": "internal/core/permissions",
+  "naming_rule": "autoname",
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "fields": [
+    {
+      "fieldname": "doctype",
+      "label": "DocType",
+      "fieldtype": "Link",
+      "options": "DocType",
+      "required": true,
+      "idx": 1
+    },
+    {
+      "fieldname": "role",
+      "label": "Role",
+      "fieldtype": "Link",
+      "options": "Role",
+      "required": true,
+      "in_list_view": true,
+      "idx": 2
+    },
+    {
+      "fieldname": "permlevel",
+      "label": "Level",
+      "fieldtype": "Int",
+      "default": "0",
+      "in_list_view": true,
+      "idx": 3
+    },
+    {
+      "fieldname": "if_owner",
+      "label": "If Owner",
+      "fieldtype": "Check",
+      "default": "0",
+      "description": "Apply this rule if the user owns the record",
+      "idx": 4
+    },
+    {
+      "fieldname": "select_perm",
+      "label": "Select",
+      "fieldtype": "Check",
+      "default": "0",
+      "in_list_view": true,
+      "idx": 5
+    },
+    {
+      "fieldname": "read",
+      "label": "Read",
+      "fieldtype": "Check",
+      "default": "1",
+      "in_list_view": true,
+      "idx": 6
+    },
+    {
+      "fieldname": "write",
+      "label": "Write",
+      "fieldtype": "Check",
+      "default": "0",
+      "in_list_view": true,
+      "idx": 7
+    },
+    {
+      "fieldname": "create_perm",
+      "label": "Create",
+      "fieldtype": "Check",
+      "default": "0",
+      "in_list_view": true,
+      "idx": 8
+    },
+    {
+      "fieldname": "delete_perm",
+      "label": "Delete",
+      "fieldtype": "Check",
+      "default": "0",
+      "in_list_view": true,
+      "idx": 9
+    },
+    {
+      "fieldname": "submit",
+      "label": "Submit",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 10
+    },
+    {
+      "fieldname": "cancel",
+      "label": "Cancel",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 11
+    },
+    {
+      "fieldname": "amend",
+      "label": "Amend",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 12
+    },
+    {
+      "fieldname": "report",
+      "label": "Report",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 13
+    },
+    {
+      "fieldname": "export",
+      "label": "Export",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 14
+    },
+    {
+      "fieldname": "import",
+      "label": "Import",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 15
+    },
+    {
+      "fieldname": "share",
+      "label": "Share",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 16
+    },
+    {
+      "fieldname": "print",
+      "label": "Print",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 17
+    },
+    {
+      "fieldname": "email",
+      "label": "Email",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 18
+    },
+    {
+      "fieldname": "mask",
+      "label": "Mask",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 19
+    },
+    {
+      "fieldname": "idx",
+      "label": "Index",
+      "fieldtype": "Int",
+      "default": "0",
+      "idx": 20
+    }
+  ],
+  "actions": [],
+  "links": [],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": true,
+      "write": true,
+      "create": true,
+      "delete": true,
+      "export": true,
+      "import": true,
+      "idx": 1
+    }
+  ],
+  "states": []
+}

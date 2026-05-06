@@ -1,0 +1,9 @@
+{
+  "name": "Core",
+  "label": "Core",
+  "description": "Gogal Engine core metadata module",
+  "version": "0.0.1",
+  "is_core": true,
+  "enabled": true,
+  "doctype_path": "modules/core/doctype"
+}

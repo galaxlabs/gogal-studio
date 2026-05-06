@@ -1,0 +1,255 @@
+{
+  "name": "DocType",
+  "module": "Core",
+  "label": "DocType",
+  "table_name": "core_doctype",
+  "is_core": true,
+  "is_single": false,
+  "is_submittable": false,
+  "is_tree": false,
+  "is_child_table": false,
+  "allow_import": true,
+  "allow_export": true,
+  "track_changes": true,
+  "editable_grid": false,
+  "quick_entry": true,
+  "controller": "internal/core/doctype",
+  "naming_rule": "field:name",
+  "title_field": "label",
+  "sort_field": "name",
+  "sort_order": "ASC",
+  "fields": [
+    {
+      "fieldname": "name",
+      "label": "Name",
+      "fieldtype": "Data",
+      "required": true,
+      "unique": true,
+      "in_list_view": true,
+      "idx": 1
+    },
+    {
+      "fieldname": "module",
+      "label": "Module",
+      "fieldtype": "Link",
+      "options": "Module Def",
+      "required": true,
+      "in_list_view": true,
+      "idx": 2
+    },
+    {
+      "fieldname": "label",
+      "label": "Label",
+      "fieldtype": "Data",
+      "required": true,
+      "in_list_view": true,
+      "idx": 3
+    },
+    {
+      "fieldname": "table_name",
+      "label": "Table Name",
+      "fieldtype": "Data",
+      "required": true,
+      "unique": true,
+      "idx": 4
+    },
+    {
+      "fieldname": "is_core",
+      "label": "Is Core",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 5
+    },
+    {
+      "fieldname": "is_single",
+      "label": "Is Single",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 6
+    },
+    {
+      "fieldname": "is_submittable",
+      "label": "Is Submittable",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 7
+    },
+    {
+      "fieldname": "is_tree",
+      "label": "Is Tree",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 8
+    },
+    {
+      "fieldname": "is_child_table",
+      "label": "Is Child Table",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 9
+    },
+    {
+      "fieldname": "allow_import",
+      "label": "Allow Import",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 10
+    },
+    {
+      "fieldname": "allow_export",
+      "label": "Allow Export",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 11
+    },
+    {
+      "fieldname": "track_changes",
+      "label": "Track Changes",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 12
+    },
+    {
+      "fieldname": "editable_grid",
+      "label": "Editable Grid",
+      "fieldtype": "Check",
+      "default": "1",
+      "idx": 13
+    },
+    {
+      "fieldname": "quick_entry",
+      "label": "Quick Entry",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 14
+    },
+    {
+      "fieldname": "controller",
+      "label": "Controller",
+      "fieldtype": "Data",
+      "idx": 15
+    },
+    {
+      "fieldname": "route",
+      "label": "Route",
+      "fieldtype": "Data",
+      "idx": 16
+    },
+    {
+      "fieldname": "naming_rule",
+      "label": "Naming Rule",
+      "fieldtype": "Select",
+      "options": "autoname\nfield:name\nseries\nmanual\nhash",
+      "default": "autoname",
+      "idx": 17
+    },
+    {
+      "fieldname": "title_field",
+      "label": "Title Field",
+      "fieldtype": "Data",
+      "idx": 18
+    },
+    {
+      "fieldname": "image_field",
+      "label": "Image Field",
+      "fieldtype": "Data",
+      "idx": 19
+    },
+    {
+      "fieldname": "sort_field",
+      "label": "Sort Field",
+      "fieldtype": "Data",
+      "default": "created_at",
+      "idx": 20
+    },
+    {
+      "fieldname": "sort_order",
+      "label": "Sort Order",
+      "fieldtype": "Select",
+      "options": "ASC\nDESC",
+      "default": "DESC",
+      "idx": 21
+    },
+    {
+      "fieldname": "fields",
+      "label": "Fields",
+      "fieldtype": "Table",
+      "options": "DocField",
+      "idx": 22
+    },
+    {
+      "fieldname": "actions",
+      "label": "Actions",
+      "fieldtype": "Table",
+      "options": "DocType Action",
+      "idx": 23
+    },
+    {
+      "fieldname": "links",
+      "label": "Links",
+      "fieldtype": "Table",
+      "options": "DocType Link",
+      "idx": 24
+    },
+    {
+      "fieldname": "permissions",
+      "label": "Permissions",
+      "fieldtype": "Table",
+      "options": "DocPerm",
+      "idx": 25
+    },
+    {
+      "fieldname": "states",
+      "label": "States",
+      "fieldtype": "Table",
+      "options": "DocType State",
+      "idx": 26
+    }
+  ],
+  "actions": [
+    {
+      "action_name": "sync_doctype",
+      "label": "Sync DocType",
+      "action_type": "server",
+      "handler": "core.doctype.sync",
+      "method": "POST",
+      "permission": "System Manager",
+      "enabled": true,
+      "idx": 1
+    },
+    {
+      "action_name": "preview_migration",
+      "label": "Preview Migration",
+      "action_type": "server",
+      "handler": "core.migration.preview",
+      "method": "POST",
+      "permission": "System Manager",
+      "enabled": true,
+      "idx": 2
+    },
+    {
+      "action_name": "apply_migration",
+      "label": "Apply Migration",
+      "action_type": "server",
+      "handler": "core.migration.apply",
+      "method": "POST",
+      "permission": "System Manager",
+      "enabled": true,
+      "idx": 3
+    }
+  ],
+  "links": [],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": true,
+      "write": true,
+      "create": true,
+      "delete": true,
+      "export": true,
+      "import": true,
+      "idx": 1
+    }
+  ],
+  "states": []
+}

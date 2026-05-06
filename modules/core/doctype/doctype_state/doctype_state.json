@@ -1,0 +1,78 @@
+{
+  "name": "DocType State",
+  "module": "Core",
+  "label": "DocType State",
+  "table_name": "core_doctype_state",
+  "is_core": true,
+  "is_single": false,
+  "is_submittable": false,
+  "is_tree": false,
+  "is_child_table": true,
+  "allow_import": true,
+  "allow_export": true,
+  "track_changes": true,
+  "editable_grid": true,
+  "quick_entry": true,
+  "controller": "internal/core/doctype",
+  "naming_rule": "autoname",
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "fields": [
+    {
+      "fieldname": "doctype",
+      "label": "DocType",
+      "fieldtype": "Link",
+      "options": "DocType",
+      "required": true,
+      "idx": 1
+    },
+    {
+      "fieldname": "title",
+      "label": "Title",
+      "fieldtype": "Data",
+      "required": true,
+      "in_list_view": true,
+      "idx": 2
+    },
+    {
+      "fieldname": "color",
+      "label": "Color",
+      "fieldtype": "Select",
+      "options": "Blue\nCyan\nGray\nGreen\nLight Blue\nOrange\nPink\nPurple\nRed\nYellow",
+      "default": "Blue",
+      "required": true,
+      "in_list_view": true,
+      "idx": 3
+    },
+    {
+      "fieldname": "custom",
+      "label": "Custom",
+      "fieldtype": "Check",
+      "default": "0",
+      "hidden": true,
+      "idx": 4
+    },
+    {
+      "fieldname": "idx",
+      "label": "Index",
+      "fieldtype": "Int",
+      "default": "0",
+      "idx": 5
+    }
+  ],
+  "actions": [],
+  "links": [],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": true,
+      "write": true,
+      "create": true,
+      "delete": true,
+      "export": true,
+      "import": true,
+      "idx": 1
+    }
+  ],
+  "states": []
+}

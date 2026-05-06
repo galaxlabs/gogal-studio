@@ -1,0 +1,113 @@
+{
+  "name": "DocType Link",
+  "module": "Core",
+  "label": "DocType Link",
+  "table_name": "core_doctype_link",
+  "is_core": true,
+  "is_single": false,
+  "is_submittable": false,
+  "is_tree": false,
+  "is_child_table": true,
+  "allow_import": true,
+  "allow_export": true,
+  "track_changes": true,
+  "editable_grid": true,
+  "quick_entry": true,
+  "controller": "internal/core/doctype",
+  "naming_rule": "autoname",
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "fields": [
+    {
+      "fieldname": "doctype",
+      "label": "DocType",
+      "fieldtype": "Link",
+      "options": "DocType",
+      "required": true,
+      "idx": 1
+    },
+    {
+      "fieldname": "link_doctype",
+      "label": "Link DocType",
+      "fieldtype": "Link",
+      "options": "DocType",
+      "required": true,
+      "in_list_view": true,
+      "idx": 2
+    },
+    {
+      "fieldname": "link_fieldname",
+      "label": "Link Fieldname",
+      "fieldtype": "Data",
+      "required": true,
+      "in_list_view": true,
+      "idx": 3
+    },
+    {
+      "fieldname": "parent_doctype",
+      "label": "Parent DocType",
+      "fieldtype": "Link",
+      "options": "DocType",
+      "depends_on": "is_child_table",
+      "idx": 4
+    },
+    {
+      "fieldname": "table_fieldname",
+      "label": "Table Fieldname",
+      "fieldtype": "Data",
+      "idx": 5
+    },
+    {
+      "fieldname": "group_name",
+      "label": "Group",
+      "fieldtype": "Data",
+      "in_list_view": true,
+      "idx": 6
+    },
+    {
+      "fieldname": "hidden",
+      "label": "Hidden",
+      "fieldtype": "Check",
+      "default": "0",
+      "idx": 7
+    },
+    {
+      "fieldname": "is_child_table",
+      "label": "Is Child Table",
+      "fieldtype": "Check",
+      "default": "0",
+      "read_only": true,
+      "idx": 8
+    },
+    {
+      "fieldname": "custom",
+      "label": "Custom",
+      "fieldtype": "Check",
+      "default": "0",
+      "hidden": true,
+      "idx": 9
+    },
+    {
+      "fieldname": "idx",
+      "label": "Index",
+      "fieldtype": "Int",
+      "default": "0",
+      "idx": 10
+    }
+  ],
+  "actions": [],
+  "links": [],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": true,
+      "write": true,
+      "create": true,
+      "delete": true,
+      "export": true,
+      "import": true,
+      "idx": 1
+    }
+  ],
+  "states": []
+}
