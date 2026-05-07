@@ -1,0 +1,82 @@
+name: Security Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+      - name: Run govulncheck
+        id: govulncheck
+        continue-on-error: true
+        run: govulncheck ./... 2>&1 | tee govulncheck-output.txt
+
+      - name: Run gosec
+        id: gosec
+        continue-on-error: true
+        run: |
+          gosec \
+            -severity medium \
+            -confidence medium \
+            -exclude-generated \
+            -fmt text \
+            ./... 2>&1 | tee gosec-output.txt
+
+      - name: Post review and block PR on findings
+        if: steps.govulncheck.outcome == 'failure' || steps.gosec.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY="## Security Gate — Changes Required"$'\n\n'
+          BODY+="This PR has been automatically reviewed and **blocked** due to security findings that must be resolved before merging."$'\n\n'
+          BODY+="---"$'\n\n'
+
+          if [[ "${{ steps.govulncheck.outcome }}" == "failure" ]]; then
+            BODY+="### Known Vulnerabilities (govulncheck)"$'\n\n'
+            BODY+="\`\`\`"$'\n'
+            BODY+="$(cat govulncheck-output.txt)"$'\n'
+            BODY+="\`\`\`"$'\n\n'
+          fi
+
+          if [[ "${{ steps.gosec.outcome }}" == "failure" ]]; then
+            BODY+="### Security Issues (gosec)"$'\n\n'
+            BODY+="\`\`\`"$'\n'
+            BODY+="$(cat gosec-output.txt)"$'\n'
+            BODY+="\`\`\`"$'\n\n'
+          fi
+
+          BODY+="---"$'\n\n'
+          BODY+="Fix all findings, push a new commit, and this check will re-run automatically."
+
+          gh pr review "${{ github.event.pull_request.number }}" \
+            --request-changes \
+            --body "$BODY"
+
+          exit 1
+
+      - name: Security check passed
+        if: steps.govulncheck.outcome == 'success' && steps.gosec.outcome == 'success'
+        run: echo "No security vulnerabilities or issues found."

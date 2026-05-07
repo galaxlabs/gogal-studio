@@ -1,0 +1,128 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  verify-tag:
+    name: Verify stable semver tag
+    runs-on: ubuntu-latest
+    outputs:
+      stable: ${{ steps.check.outputs.stable }}
+    steps:
+      - name: Check stable semver (no pre-release suffix)
+        id: check
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "stable=true" >> "$GITHUB_OUTPUT"
+            echo "Stable release tag: $TAG"
+          else
+            echo "stable=false" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG is a pre-release — no release artifact will be built."
+            exit 1
+          fi
+
+  test:
+    name: Tests must pass
+    needs: verify-tag
+    if: needs.verify-tag.outputs.stable == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Check formatting
+        run: |
+          UNFORMATTED=$(gofmt -l .)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "Unformatted files:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -race -count=1 -timeout=120s ./...
+
+  security:
+    name: Security must pass
+    needs: verify-tag
+    if: needs.verify-tag.outputs.stable == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+      - name: govulncheck
+        run: govulncheck ./...
+
+      - name: gosec
+        run: gosec -severity medium -confidence medium -exclude-generated ./...
+
+  build-release:
+    name: Build and publish release
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build binaries for all platforms
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          LDFLAGS="-X main.version=${VERSION} -s -w"
+          mkdir -p dist
+          GOOS=linux   GOARCH=amd64 go build -ldflags "$LDFLAGS" -o dist/gogal-linux-amd64        ./cmd/gogal
+          GOOS=linux   GOARCH=arm64 go build -ldflags "$LDFLAGS" -o dist/gogal-linux-arm64        ./cmd/gogal
+          GOOS=darwin  GOARCH=amd64 go build -ldflags "$LDFLAGS" -o dist/gogal-darwin-amd64       ./cmd/gogal
+          GOOS=darwin  GOARCH=arm64 go build -ldflags "$LDFLAGS" -o dist/gogal-darwin-arm64       ./cmd/gogal
+          GOOS=windows GOARCH=amd64 go build -ldflags "$LDFLAGS" -o dist/gogal-windows-amd64.exe  ./cmd/gogal
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "Gogal Studio ${GITHUB_REF_NAME}" \
+            --notes "## Gogal Studio ${GITHUB_REF_NAME}
+
+          All tests passed. All security checks passed. Stable release.
+
+          ### Install
+          Download the binary for your platform from the assets below and run:
+          \`\`\`bash
+          chmod +x gogal-linux-amd64
+          ./gogal-linux-amd64 install
+          ./gogal-linux-amd64 start
+          \`\`\`" \
+            dist/gogal-linux-amd64 \
+            dist/gogal-linux-arm64 \
+            dist/gogal-darwin-amd64 \
+            dist/gogal-darwin-arm64 \
+            dist/gogal-windows-amd64.exe
