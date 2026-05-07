@@ -1,0 +1,74 @@
+package api
+
+import (
+	"encoding/json"
+
+	coredoctype "github.com/galaxylabs/gogal-studio/internal/core/doctype"
+	"github.com/gofiber/fiber/v2"
+)
+
+func (h *Handler) SaveDocType(c *fiber.Ctx) error {
+	raw := c.Body()
+
+	var doc coredoctype.DocTypeJSON
+
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid DocType JSON: " + err.Error(),
+		})
+	}
+
+	if doc.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "name is required",
+		})
+	}
+
+	if doc.Module == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "module is required",
+		})
+	}
+
+	if doc.Label == "" {
+		doc.Label = doc.Name
+	}
+
+	if doc.NamingRule == "" {
+		doc.NamingRule = "autoname"
+	}
+
+	if doc.SortField == "" {
+		doc.SortField = "created_at"
+	}
+
+	if doc.SortOrder == "" {
+		doc.SortOrder = "DESC"
+	}
+
+	jsonPath, jsonHash, err := coredoctype.WriteDocTypeFile(".", doc)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	syncer := coredoctype.NewSyncer(h.DB)
+
+	if err := syncer.SyncOne(jsonPath, jsonHash, doc); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message":     "DocType metadata saved",
+		"doctype":     doc.Name,
+		"module":      doc.Module,
+		"table_name":  doc.TableName,
+		"file_path":   jsonPath,
+		"json_hash":   jsonHash,
+		"source_path": jsonPath,
+		"note":        "DocType JSON written and metadata synced. Physical table migration is not applied yet.",
+	})
+}

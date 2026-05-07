@@ -1,0 +1,9 @@
+{
+  "name": "Selling",
+  "label": "Selling",
+  "description": "Selling module",
+  "version": "0.0.1",
+  "is_core": false,
+  "enabled": true,
+  "doctype_path": "modules/selling/doctype"
+}

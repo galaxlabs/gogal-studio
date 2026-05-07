@@ -1,0 +1,96 @@
+package bootstrap
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+func EnsureCoreMetaColumns(database *pgxpool.Pool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	statements := []string{
+		// tabDocType expanded metadata
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS label TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS autoname TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS naming_rule TEXT DEFAULT 'autoname'`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS title_field TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS image_field TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS sort_field TEXT DEFAULT 'modified'`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS sort_order TEXT DEFAULT 'DESC'`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS document_type TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS icon TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS allow_import BOOLEAN NOT NULL DEFAULT TRUE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS allow_export BOOLEAN NOT NULL DEFAULT TRUE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS allow_rename BOOLEAN NOT NULL DEFAULT TRUE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS allow_copy BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS track_changes BOOLEAN NOT NULL DEFAULT TRUE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS track_views BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS track_seen BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS quick_entry BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS editable_grid BOOLEAN NOT NULL DEFAULT TRUE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS read_only BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS in_create BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS hide_toolbar BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS is_virtual BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS is_large_table BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS max_attachments INT NOT NULL DEFAULT 0`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS search_fields TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS row_format TEXT DEFAULT 'Dynamic'`,
+		`ALTER TABLE "tabDocType" ADD COLUMN IF NOT EXISTS section_style TEXT DEFAULT 'Simple'`,
+
+		// tabDocField expanded metadata
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS parentfield TEXT DEFAULT 'fields'`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS parenttype TEXT DEFAULT 'DocType'`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS default_value TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS depends_on TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS mandatory_depends_on TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS read_only_depends_on TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS collapsible BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS collapsible_depends_on TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS hide_border BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS in_filter BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS in_global_search BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS in_preview BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS in_standard_filter BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS in_import_template BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS search_index BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS unique_field BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS no_copy BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS set_only_once BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS allow_on_submit BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS allow_bulk_edit BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS ignore_user_permissions BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS ignore_xss_filter BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS translatable BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS bold BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS print_hide BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS report_hide BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS permlevel INT NOT NULL DEFAULT 0`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS columns INT NOT NULL DEFAULT 0`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS length INT NOT NULL DEFAULT 0`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS precision_value INT NOT NULL DEFAULT 0`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS width TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS print_width TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS max_height TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS placeholder TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS fetch_from TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS fetch_if_empty BOOLEAN NOT NULL DEFAULT FALSE`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS oldfieldname TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS oldfieldtype TEXT DEFAULT ''`,
+		`ALTER TABLE "tabDocField" ADD COLUMN IF NOT EXISTS validation_rule TEXT DEFAULT ''`,
+	}
+
+	for _, statement := range statements {
+		if _, err := database.Exec(ctx, statement); err != nil {
+			return fmt.Errorf("core meta column migration failed: %w\nstatement: %s", err, statement)
+		}
+	}
+
+	return nil
+}

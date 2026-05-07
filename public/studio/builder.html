@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Gogal Studio Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/studio-assets/builder.css" />
+</head>
+<body>
+  <div class="builder-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">G</div>
+        <div>
+          <h1>Gogal Builder</h1>
+          <p>DocType Designer</p>
+        </div>
+      </div>
+
+      <button id="backBtn" class="secondary-btn">Back to Metadata</button>
+      <button id="createDocTypeBtn" class="primary-btn">+ Create DocType</button>
+
+      <div class="section-title">DocTypes</div>
+      <div id="doctypeList" class="doctype-list">Loading...</div>
+    </aside>
+
+    <main class="builder-main">
+      <header class="topbar">
+        <div>
+          <h2 id="pageTitle">DocType Builder</h2>
+          <p id="pageSubtitle">Create or select a DocType draft.</p>
+        </div>
+
+        <div class="topbar-actions">
+          <button id="saveDraftBtn" class="primary-btn">Save Metadata Draft</button>
+          <span id="statusPill" class="status-pill">Ready</span>
+        </div>
+      </header>
+
+      <section class="builder-grid">
+        <section class="canvas-panel">
+          <div class="panel-header canvas-header">
+            <div>
+              <h3 id="centerTitle">Form Canvas</h3>
+              <small id="centerSubtitle">Fields and actions stay in UI draft state until saved.</small>
+            </div>
+
+            <label class="toggle">
+              <input id="showMetaFields" type="checkbox" />
+              Show meta/internal fields
+            </label>
+          </div>
+
+          <div class="tabbar">
+            <button class="tab active" data-tab="fields">Fields</button>
+            <button class="tab" data-tab="actions">Actions</button>
+            <button class="tab" data-tab="json">JSON Preview</button>
+          </div>
+
+          <div id="workspace" class="workspace">
+            Select a DocType from the left side.
+          </div>
+        </section>
+
+        <aside class="properties-panel">
+          <div class="panel-header">
+            <h3>Properties</h3>
+          </div>
+
+          <div id="propertiesPanel" class="panel-body muted">
+            No draft selected.
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script src="/studio-assets/builder-policy.js"></script>
+  <script src="/studio-assets/builder.js"></script>
+  <script src="/studio-assets/builder-create.js"></script>
+</body>
+</html>

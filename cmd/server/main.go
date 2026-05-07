@@ -20,7 +20,6 @@ func main() {
 	server := apphttp.NewServer(cfg, database)
 
 	log.Println(cfg.AppName + " running on http://127.0.0.1:" + cfg.AppPort)
-	log.Println("Connected to PostgreSQL")
 
 	if err := server.App.Listen(":" + cfg.AppPort); err != nil {
 		log.Fatal(err)

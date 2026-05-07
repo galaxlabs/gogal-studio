@@ -1,0 +1,5 @@
+{
+  "default_site": "gogal.dev",
+  "server_port": 8080,
+  "developer_mode": true
+}

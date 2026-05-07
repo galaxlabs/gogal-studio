@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/galaxylabs/gogal-studio/internal/config"
+	coreapi "github.com/galaxylabs/gogal-studio/internal/core/api"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -36,6 +37,16 @@ func RegisterRoutes(app *fiber.App, cfg config.Config, database *pgxpool.Pool) {
 		})
 	})
 
+	// Gogal Studio UI
+	app.Static("/studio-assets", "./public/studio")
+
+	app.Get("/studio", func(c *fiber.Ctx) error {
+		return c.SendFile("./public/studio/index.html")
+	})
+
+	app.Get("/app", func(c *fiber.Ctx) error {
+		return c.Redirect("/studio")
+	})
 	api := app.Group("/api")
 
 	api.Get("/", func(c *fiber.Ctx) error {
@@ -48,9 +59,14 @@ func RegisterRoutes(app *fiber.App, cfg config.Config, database *pgxpool.Pool) {
 		return c.JSON(fiber.Map{
 			"name":    "gogal-studio",
 			"version": "0.0.1",
-			"stage":   "foundation",
+			"stage":   "studio-json-preview",
 			"engine":  "Gogal Engine",
 			"company": "Galaxy Labs",
 		})
 	})
+
+	coreHandler := coreapi.NewHandler(database)
+
+	coreGroup := api.Group("/core")
+	coreapi.RegisterRoutes(coreGroup, coreHandler)
 }

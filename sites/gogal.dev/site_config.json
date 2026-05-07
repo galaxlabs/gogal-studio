@@ -1,0 +1,20 @@
+{
+  "site_name": "gogal.dev",
+  "db_type": "postgres",
+  "db_host": "127.0.0.1",
+  "db_port": 5432,
+  "db_name": "gogal_dev",
+  "db_user": "gogal_dev_user",
+  "db_password": "_K_YkVMll-MQVzRfLKX-gJBB8EUb1pK2lJx672naOh4c",
+  "installed_apps": [
+    "gogal_studio"
+  ],
+  "installed_modules": [
+    "Core",
+    "Setup",
+    "Security",
+    "Desk",
+    "Workspace",
+    "Navigation"
+  ]
+}
