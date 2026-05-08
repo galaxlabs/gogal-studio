@@ -13,7 +13,7 @@ import StudioSidebar from "./components/StudioSidebar.js";
 import StudioTopbar from "./components/StudioTopbar.js";
 import SummaryCards from "./components/SummaryCards.js";
 import TabsBar from "./components/TabsBar.js";
-import { displayAppName, displayTableName } from "./utils/display.js";
+import { displayTableName } from "./utils/display.js";
 
 function viewTitle(view) {
   if (view === "resource") return "Resource List";
@@ -52,23 +52,10 @@ export default {
   },
   computed: {
     visibleDocTypes() {
-      const search = this.doctypeSearch.trim().toLowerCase();
       let rows = this.doctypes;
 
       if (this.activeModule !== "All") {
         rows = rows.filter((dt) => dt.module === this.activeModule);
-      }
-
-      if (search) {
-        rows = rows.filter((dt) => [
-          dt.name || "",
-          dt.label || "",
-          dt.module || "",
-          dt.table_name || "",
-          displayTableName(dt.table_name),
-          dt.app_name || "",
-          displayAppName(dt.app_name)
-        ].join(" ").toLowerCase().includes(search));
       }
 
       return rows;
@@ -289,6 +276,53 @@ export default {
         this.error = error.message;
       }
     },
+    canDeleteDocType(doctype) {
+      const protectedDocTypes = new Set([
+        "DocType",
+        "DocField",
+        "DocPerm",
+        "Module Def",
+        "Installed App",
+        "Installed Module",
+        "User",
+        "Role",
+        "Has Role",
+        "Naming Series"
+      ]);
+
+      return Boolean(doctype?.name) && !protectedDocTypes.has(doctype.name);
+    },
+    async deleteDocType(doctype) {
+      if (!this.canDeleteDocType(doctype)) return;
+
+      const ok = window.confirm(`Delete DocType "${doctype.name}"? This removes the DocType metadata record.`);
+      if (!ok) return;
+
+      this.setStatus("Deleting DocType...");
+
+      try {
+        await deleteResourceDoc("DocType", doctype.name);
+        const doctypes = this.doctypes.filter((item) => item.name !== doctype.name);
+        this.doctypes = doctypes;
+
+        const next = doctypes.find((item) => item.name === "DocType") || doctypes[0];
+        this.activeBundle = null;
+        this.activeRecord = null;
+        this.activeField = null;
+        this.activePermission = null;
+        this.isNewRecord = false;
+
+        if (next?.name) {
+          await this.loadDocType(next.name);
+        }
+
+        this.setStatus("DocType deleted", "success");
+      } catch (error) {
+        console.error(error);
+        this.error = error.message;
+        this.setStatus("Delete failed", "error");
+      }
+    },
     renderActiveViewContent() {
       if (!this.activeBundle) {
         return h("div", { class: "gs-empty" }, this.error || "Loading Studio...");
@@ -296,7 +330,11 @@ export default {
 
       const shared = [
         h(Breadcrumb, { bundle: this.activeBundle, activeView: this.activeView, activeRecord: this.activeRecord }),
-        h(MetaCard, { bundle: this.activeBundle })
+        h(MetaCard, {
+          bundle: this.activeBundle,
+          canDelete: this.canDeleteDocType(this.activeBundle.doctype),
+          onDeleteDoctype: this.deleteDocType
+        })
       ];
 
       if (this.activeView === "resource") {
@@ -369,11 +407,8 @@ export default {
         doctypes: this.visibleDocTypes,
         activeModule: this.activeModule,
         activeDocType: this.activeDocType,
-        search: this.doctypeSearch,
-        totalDocTypes: this.doctypes.length,
         onSelectModule: this.selectModule,
         onSelectDoctype: this.selectDocType,
-        onUpdateSearch: (value) => { this.doctypeSearch = value; },
         onRefresh: this.refreshActive
       }),
       default: () => [

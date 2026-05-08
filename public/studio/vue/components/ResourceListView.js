@@ -36,9 +36,8 @@ export default {
 
     return h("div", [
       resourceError ? h("div", { class: "gs-error-box" }, [
-        h("strong", `${doctype} record table is not available.`),
-        h("p", resourceError),
-        h("p", "Metadata tabs still work. Create the database table before using list, edit, save, or delete records for this DocType.")
+        h("strong", `${doctype} has no record table yet.`),
+        h("p", "You can inspect metadata or delete the DocType from the metadata card. Create the database table before adding records.")
       ]) : null,
       h("div", { class: "gs-list-toolbar" }, [
         h("div", { class: "gs-list-title" }, [

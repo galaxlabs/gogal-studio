@@ -157,8 +157,9 @@ button {
   display: block;
   overflow: hidden;
   color: #f8fafc;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 780;
+  letter-spacing: 0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -196,63 +197,6 @@ button {
 .gs-nav-item.active {
   border-color: rgba(47, 159, 138, 0.45);
   background: #176b5d;
-}
-
-.gs-sidebar-search {
-  width: 100%;
-  min-height: 38px;
-  padding: 9px 11px;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  background: #020617;
-  color: #ffffff;
-  font: inherit;
-  font-size: 13px;
-  outline: none;
-}
-
-.gs-sidebar-search:focus {
-  border-color: #2f9f8a;
-  box-shadow: 0 0 0 3px rgba(47, 159, 138, 0.18);
-}
-
-.gs-sidebar-search::placeholder {
-  color: #64748b;
-}
-
-.gs-sidebar-search-wrap {
-  position: relative;
-  margin-bottom: 6px;
-}
-
-.gs-sidebar-search-wrap .gs-sidebar-search {
-  padding-right: 58px;
-}
-
-.gs-sidebar-search-clear {
-  position: absolute;
-  top: 50%;
-  right: 6px;
-  min-height: 26px;
-  padding: 3px 7px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #dbe3ee;
-  font-size: 11px;
-  font-weight: 800;
-  transform: translateY(-50%);
-}
-
-.gs-sidebar-search-clear:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.gs-sidebar-search-meta {
-  margin-bottom: 9px;
-  color: #9da9ba;
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .gs-selected-doctype {
@@ -663,6 +607,13 @@ button {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 7px;
+}
+
+.gs-meta-side {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .gs-meta-badge {
