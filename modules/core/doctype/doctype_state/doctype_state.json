@@ -1,8 +1,8 @@
 {
   "name": "DocType State",
   "module": "Core",
+  "app_name": "gogal_studio",
   "label": "DocType State",
-  "table_name": "core_doctype_state",
   "is_core": true,
   "is_single": false,
   "is_submittable": false,

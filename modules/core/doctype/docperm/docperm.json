@@ -1,8 +1,8 @@
 {
   "name": "DocPerm",
   "module": "Core",
+  "app_name": "gogal_studio",
   "label": "DocPerm",
-  "table_name": "core_docperm",
   "is_core": true,
   "is_single": false,
   "is_submittable": false,

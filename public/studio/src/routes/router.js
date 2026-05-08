@@ -1,33 +1,33 @@
-import { loadDashboard } from "../pages/dashboard.page.js";
-import { showNewDocTypeForm, showEditDocTypeForm } from "../pages/doctypeForm.page.js";
+import { routes } from "./routes.js";
 
-export function startRouter() {
-  window.addEventListener("hashchange", resolveRoute);
-  resolveRoute();
-}
+export function createRouter() {
+  let currentPage = null;
 
-export function goTo(path) {
-  window.location.hash = path;
-}
+  async function navigate(routeName, params = {}) {
+    const route = routes.find((item) => item.name === routeName);
 
-async function resolveRoute() {
-  const hash = window.location.hash || "#/dashboard";
+    if (!route) {
+      throw new Error(`Route not found: ${routeName}`);
+    }
 
-  if (hash === "#/dashboard" || hash === "#/") {
-    await loadDashboard();
-    return;
+    if (currentPage && typeof currentPage.destroy === "function") {
+      currentPage.destroy();
+    }
+
+    currentPage = route.page(router, params);
+
+    if (typeof currentPage.mount === "function") {
+      await currentPage.mount();
+    }
   }
 
-  if (hash === "#/doctype/new") {
-    showNewDocTypeForm();
-    return;
-  }
+  const router = {
+    start() {
+      window.gogalRouter = router;
+      return navigate("dashboard");
+    },
+    navigate
+  };
 
-  if (hash.startsWith("#/doctype/")) {
-    const name = decodeURIComponent(hash.replace("#/doctype/", ""));
-    await showEditDocTypeForm(name);
-    return;
-  }
-
-  await loadDashboard();
+  return router;
 }

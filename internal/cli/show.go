@@ -16,9 +16,105 @@ func NewShowCommand() *cobra.Command {
 		Short: "Show Gogal Studio core records",
 	}
 
+	cmd.AddCommand(newShowDocTypeCommand())
 	cmd.AddCommand(newShowNamingSeriesCommand())
 
 	return cmd
+}
+
+func newShowDocTypeCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "doctype [name]",
+		Short: "Show one DocType with permissions",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := loadListSiteConfig()
+			if err != nil {
+				return err
+			}
+
+			database, err := db.Connect(cfg.DatabaseURL())
+			if err != nil {
+				return err
+			}
+			defer database.Close()
+
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+
+			fmt.Printf("DocType: %s\n\n", args[0])
+
+			permRows, err := database.Query(ctx, `
+				SELECT
+					role,
+					permlevel,
+					"read",
+					"write",
+					create_perm,
+					delete_perm,
+					submit_perm,
+					cancel_perm,
+					amend_perm,
+					idx
+				FROM "tabDocPerm"
+				WHERE parent = $1
+				ORDER BY idx, name
+			`, args[0])
+			if err != nil {
+				return err
+			}
+			defer permRows.Close()
+
+			fmt.Println("Permissions")
+			fmt.Println("-----------")
+
+			for permRows.Next() {
+				var (
+					role       string
+					permlevel  int
+					read       bool
+					write      bool
+					createPerm bool
+					deletePerm bool
+					submitPerm bool
+					cancelPerm bool
+					amendPerm  bool
+					idx        int
+				)
+
+				if err := permRows.Scan(
+					&role,
+					&permlevel,
+					&read,
+					&write,
+					&createPerm,
+					&deletePerm,
+					&submitPerm,
+					&cancelPerm,
+					&amendPerm,
+					&idx,
+				); err != nil {
+					return err
+				}
+
+				fmt.Printf(
+					"%d | %s | level=%d | read=%v write=%v create=%v delete=%v submit=%v cancel=%v amend=%v\n",
+					idx,
+					role,
+					permlevel,
+					read,
+					write,
+					createPerm,
+					deletePerm,
+					submitPerm,
+					cancelPerm,
+					amendPerm,
+				)
+			}
+
+			return permRows.Err()
+		},
+	}
 }
 
 func newShowNamingSeriesCommand() *cobra.Command {

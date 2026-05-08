@@ -8,20 +8,18 @@ export async function apiGet(url) {
   return res.json();
 }
 
-export async function apiPost(url, body) {
+export async function apiRequest(url, options = {}) {
   const res = await fetch(url, {
-    method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...(options.headers || {})
     },
-    body: JSON.stringify(body)
+    ...options
   });
 
-  const data = await res.json();
-
   if (!res.ok) {
-    throw new Error(data.error || "Request failed");
+    throw new Error(await res.text());
   }
 
-  return data;
+  return res.json();
 }

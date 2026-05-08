@@ -1,117 +1,61 @@
-import {
-  getInstalledApps,
-  getModules,
-  getDocTypes,
-  getDocType,
-  getDocTypeFields,
-  getDocTypePermissions
-} from "../api/core.js";
+import { loadBootData } from "../boot/boot.js";
+import { mountDeskSummary } from "../boot/desk.js";
+import { bindDocTypeSearch, renderDocTypes, renderModules } from "../components/sidebar.js";
+import { setStatus } from "../components/status.js";
+import { store } from "../state/store.js";
 
-import { renderDocTypeDetails } from "../renderers/doctypeRenderer.js";
-import { renderFields } from "../renderers/fieldRenderer.js";
-import { renderPermissions } from "../renderers/permissionRenderer.js";
-import { goTo } from "../routes/router.js";
-let dashboardBound = false;
+export function getVisibleDocTypes() {
+  const searchText = (store.doctypeSearch || "").trim().toLowerCase();
+  let doctypes = store.doctypes || [];
 
-export async function loadDashboard() {
-  const statusPill = document.getElementById("statusPill");
-  const doctypeList = document.getElementById("doctypeList");
-
-  setStatus("Loading...");
-
-  try {
-    const [appsRes, modulesRes, doctypesRes] = await Promise.all([
-      getInstalledApps(),
-      getModules(),
-      getDocTypes()
-    ]);
-
-    const apps = appsRes.data || [];
-    const modules = modulesRes.data || [];
-    const doctypes = doctypesRes.data || [];
-
-    document.getElementById("appCount").textContent = apps.length;
-    document.getElementById("moduleCount").textContent = modules.length;
-    document.getElementById("doctypeCount").textContent = doctypes.length;
-
-    doctypeList.innerHTML = doctypes.map((dt) => `
-      <button class="doctype-item" data-doctype="${dt.name}">
-        <strong>${dt.name}</strong>
-        <small>${dt.module} · ${dt.table_name}</small>
-      </button>
-    `).join("");
-
-    doctypeList.querySelectorAll(".doctype-item").forEach((btn) => {
-      btn.addEventListener("click", () => {
-  goTo(`/doctype/${encodeURIComponent(btn.dataset.doctype)}`);
-});
-    });
-
-    if (!dashboardBound) {
-      document.getElementById("refreshBtn").addEventListener("click", loadDashboard);
-
-      const newDocTypeBtn = document.getElementById("newDocTypeBtn");
-
-      if (newDocTypeBtn && !newDocTypeBtn.dataset.bound) {
-        newDocTypeBtn.addEventListener("click", () => goTo("/doctype/new"));
-        newDocTypeBtn.dataset.bound = "1";
-      }
-
-      dashboardBound = true;
-    }
-
-    statusPill.className = "status-pill success";
-    statusPill.textContent = "Loaded";
-  } catch (err) {
-    console.error(err);
-    statusPill.className = "status-pill error";
-    statusPill.textContent = "Load failed";
-    doctypeList.innerHTML = `<div class="muted">${err.message}</div>`;
+  if (store.activeModule && store.activeModule !== "All") {
+    doctypes = doctypes.filter((dt) => dt.module === store.activeModule);
   }
+
+  if (searchText) {
+    doctypes = doctypes.filter((dt) => {
+      const haystack = `${dt.name || ""} ${dt.module || ""} ${dt.table_name || ""}`.toLowerCase();
+      return haystack.includes(searchText);
+    });
+  }
+
+  return doctypes;
 }
 
-async function loadDocType(name) {
-  setStatus("Loading DocType...");
+export function DashboardPage(router) {
+  async function mount() {
+    setStatus("Loading...");
 
-  try {
-    const [dtRes, fieldsRes, permsRes] = await Promise.all([
-      getDocType(name),
-      getDocTypeFields(name),
-      getDocTypePermissions(name)
-    ]);
+    await loadBootData();
+    store.activeModule = store.activeModule || "All";
+    store.doctypeSearch = store.doctypeSearch || "";
 
-    const dt = dtRes.data;
-    const fields = fieldsRes.data || [];
-    const perms = permsRes.data || [];
+    mountDeskSummary(store);
 
-    document.getElementById("pageTitle").textContent = dt.name;
-    document.getElementById("pageSubtitle").textContent = `${dt.module} · ${dt.table_name}`;
+    const renderVisibleDocTypes = () => {
+      renderDocTypes(getVisibleDocTypes(), (doctypeName) => {
+        router.navigate("doctype", { name: doctypeName });
+      });
+    };
 
-    document.getElementById("fieldCount").textContent = fields.length;
-    document.getElementById("permCount").textContent = perms.length;
+    const handleModuleClick = (moduleName) => {
+      store.activeModule = moduleName || "All";
+      renderModules(store.modules, handleModuleClick);
+      renderVisibleDocTypes();
+    };
 
-    document.querySelectorAll(".doctype-item").forEach((item) => {
-      item.classList.toggle("active", item.dataset.doctype === name);
+    renderModules(store.modules, handleModuleClick);
+    bindDocTypeSearch((searchText) => {
+      store.doctypeSearch = searchText;
+      renderVisibleDocTypes();
     });
 
-    document.getElementById("detailsPanel").innerHTML = renderDocTypeDetails(dt);
-    document.getElementById("fieldsPanel").innerHTML = renderFields(fields);
-    document.getElementById("permsPanel").innerHTML = renderPermissions(perms);
+    renderVisibleDocTypes();
 
     setStatus("Loaded", "success");
-  } catch (err) {
-    console.error(err);
-    setStatus("Load failed", "error");
+
+    await router.navigate("doctype", { name: store.activeDocType || "DocType" });
   }
-}
 
-function setStatus(message, type = "") {
-  const statusPill = document.getElementById("statusPill");
-
-  statusPill.textContent = message;
-  statusPill.className = "status-pill";
-
-  if (type) {
-    statusPill.classList.add(type);
-  }
+  return { mount };
 }

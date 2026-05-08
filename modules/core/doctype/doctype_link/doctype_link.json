@@ -1,8 +1,8 @@
 {
   "name": "DocType Link",
   "module": "Core",
+  "app_name": "gogal_studio",
   "label": "DocType Link",
-  "table_name": "core_doctype_link",
   "is_core": true,
   "is_single": false,
   "is_submittable": false,

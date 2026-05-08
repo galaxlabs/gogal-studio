@@ -39,6 +39,7 @@ func RegisterRoutes(app *fiber.App, cfg config.Config, database *pgxpool.Pool) {
 
 	// Gogal Studio UI
 	app.Static("/studio-assets", "./public/studio")
+	app.Static("/vendor", "./public/vendor")
 
 	app.Get("/studio", func(c *fiber.Ctx) error {
 		return c.SendFile("./public/studio/index.html")
@@ -69,4 +70,11 @@ func RegisterRoutes(app *fiber.App, cfg config.Config, database *pgxpool.Pool) {
 
 	coreGroup := api.Group("/core")
 	coreapi.RegisterRoutes(coreGroup, coreHandler)
+
+	resourceGroup := api.Group("/resource")
+	resourceGroup.Get("/:doctype", coreHandler.ListResources)
+	resourceGroup.Post("/:doctype", coreHandler.CreateDocument)
+	resourceGroup.Get("/:doctype/:name", coreHandler.GetResource)
+	resourceGroup.Put("/:doctype/:name", coreHandler.UpdateDocument)
+	resourceGroup.Delete("/:doctype/:name", coreHandler.DeleteDocument)
 }

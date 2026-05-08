@@ -9,6 +9,7 @@ import (
 	coredoctype "github.com/galaxylabs/gogal-studio/internal/core/doctype"
 	"github.com/galaxylabs/gogal-studio/internal/core/fieldtype"
 	coremodule "github.com/galaxylabs/gogal-studio/internal/core/module"
+	"github.com/galaxylabs/gogal-studio/internal/core/system"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -242,114 +243,46 @@ func validateCoreDocFieldLinks(ctx context.Context, tx pgx.Tx, seedDocTypes map[
 }
 
 func standardSystemFields() []coreDocFieldSeed {
-	return []coreDocFieldSeed{
-		{
-			Fieldname:   "name",
-			Label:       "Name",
-			Fieldtype:   "Data",
-			Hidden:      true,
-			ReadOnly:    true,
-			SearchIndex: true,
-			UniqueField: true,
-			NoCopy:      true,
-			SetOnlyOnce: true,
-			Columns:     6,
-			Length:      140,
-			Idx:         1,
-			Description: "System document name / public identifier.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "owner",
-			Label:       "Owner",
-			Fieldtype:   "Link",
-			Options:     "User",
-			Hidden:      true,
-			ReadOnly:    true,
-			InFilter:    true,
-			SearchIndex: true,
-			NoCopy:      true,
-			Columns:     6,
-			Length:      140,
-			Idx:         2,
-			Description: "User who owns the document.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "creation",
-			Label:       "Creation",
-			Fieldtype:   "Datetime",
-			Hidden:      true,
-			ReadOnly:    true,
-			InFilter:    true,
-			NoCopy:      true,
-			Columns:     4,
-			Idx:         3,
-			Description: "Document creation datetime.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "modified",
-			Label:       "Modified",
-			Fieldtype:   "Datetime",
-			Hidden:      true,
-			ReadOnly:    true,
-			InFilter:    true,
-			SearchIndex: true,
-			NoCopy:      true,
-			Columns:     4,
-			Idx:         4,
-			Description: "Last modified datetime.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "modified_by",
-			Label:       "Modified By",
-			Fieldtype:   "Link",
-			Options:     "User",
-			Hidden:      true,
-			ReadOnly:    true,
-			InFilter:    true,
-			NoCopy:      true,
-			Columns:     6,
-			Length:      140,
-			Idx:         5,
-			Description: "User who last modified the document.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "docstatus",
-			Label:       "Docstatus",
-			Fieldtype:   "Int",
-			Hidden:      true,
-			ReadOnly:    true,
-			InFilter:    true,
-			NoCopy:      true,
-			Columns:     3,
-			Idx:         6,
-			Description: "0 = Draft, 1 = Submitted, 2 = Cancelled.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
-		{
-			Fieldname:   "idx",
-			Label:       "Index",
-			Fieldtype:   "Int",
-			Hidden:      true,
-			ReadOnly:    true,
-			NoCopy:      true,
-			Columns:     3,
-			Idx:         7,
-			Description: "Sort order index.",
-			Parentfield: "fields",
-			Parenttype:  "DocType",
-		},
+	fields := system.StandardFields()
+	seeds := make([]coreDocFieldSeed, 0, len(fields))
+
+	for _, f := range fields {
+		seeds = append(seeds, coreDocFieldSeed{
+			Fieldname:          f.Fieldname,
+			Label:              f.Label,
+			Fieldtype:          f.Fieldtype,
+			Options:            f.Options,
+			Reqd:               f.Reqd,
+			Hidden:             f.Hidden,
+			ReadOnly:           f.ReadOnly,
+			InListView:         f.InListView,
+			InStandardFilter:   f.InStandardFilter,
+			InFilter:           f.InFilter,
+			InGlobalSearch:     f.InGlobalSearch,
+			SearchIndex:        f.SearchIndex,
+			UniqueField:        f.UniqueField,
+			NoCopy:             f.NoCopy,
+			SetOnlyOnce:        f.SetOnlyOnce,
+			AllowOnSubmit:      f.AllowOnSubmit,
+			Permlevel:          f.Permlevel,
+			Columns:            f.Columns,
+			Length:             f.Length,
+			PrecisionValue:     f.PrecisionValue,
+			DefaultValue:       f.DefaultValue,
+			Description:        f.Description,
+			DependsOn:          f.DependsOn,
+			MandatoryDependsOn: f.MandatoryDependsOn,
+			ReadOnlyDependsOn:  f.ReadOnlyDependsOn,
+			Placeholder:        f.Placeholder,
+			FetchFrom:          f.FetchFrom,
+			ValidationRule:     f.ValidationRule,
+			Idx:                f.Idx,
+			Parentfield:        "fields",
+			Parenttype:         "DocType",
+		})
 	}
+
+	return seeds
 }
 
 func withStandardSystemFields(fields []coreDocFieldSeed) []coreDocFieldSeed {
@@ -832,7 +765,7 @@ func SeedCoreDocPerms(database *pgxpool.Pool) error {
 	}
 
 	for idx, doctypeName := range doctypes {
-		permName := doctypeName + "-System Manager"
+		permName := fmt.Sprintf("%s-System Manager-0", doctypeName)
 
 		_, err := tx.Exec(ctx, `
 			INSERT INTO "tabDocPerm" (
@@ -844,13 +777,28 @@ func SeedCoreDocPerms(database *pgxpool.Pool) error {
 				"write",
 				create_perm,
 				delete_perm,
+				submit_perm,
+				cancel_perm,
+				amend_perm,
+				print_perm,
+				email_perm,
+				export_perm,
+				import_perm,
+				share_perm,
+				report_perm,
 				owner,
 				modified_by,
 				docstatus,
 				idx
 			)
-			VALUES ($1,$2,$3,0,TRUE,TRUE,TRUE,TRUE,$4,$5,$6,$7)
-			ON CONFLICT (name)
+			VALUES (
+				$1,$2,$3,0,
+				TRUE,TRUE,TRUE,TRUE,
+				TRUE,TRUE,TRUE,
+				TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,
+				$4,$5,$6,$7
+			)
+			ON CONFLICT ON CONSTRAINT "tabDocPerm_parent_role_permlevel_key"
 			DO UPDATE SET
 				parent = EXCLUDED.parent,
 				role = EXCLUDED.role,
@@ -859,6 +807,15 @@ func SeedCoreDocPerms(database *pgxpool.Pool) error {
 				"write" = EXCLUDED."write",
 				create_perm = EXCLUDED.create_perm,
 				delete_perm = EXCLUDED.delete_perm,
+				submit_perm = EXCLUDED.submit_perm,
+				cancel_perm = EXCLUDED.cancel_perm,
+				amend_perm = EXCLUDED.amend_perm,
+				print_perm = EXCLUDED.print_perm,
+				email_perm = EXCLUDED.email_perm,
+				export_perm = EXCLUDED.export_perm,
+				import_perm = EXCLUDED.import_perm,
+				share_perm = EXCLUDED.share_perm,
+				report_perm = EXCLUDED.report_perm,
 				owner = EXCLUDED.owner,
 				modified_by = EXCLUDED.modified_by,
 				docstatus = EXCLUDED.docstatus,

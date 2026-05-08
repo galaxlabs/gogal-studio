@@ -1,271 +1,221 @@
 {
   "name": "DocField",
-  "module": "Core",
   "label": "DocField",
-  "table_name": "core_docfield",
-  "is_core": true,
-  "is_single": false,
-  "is_submittable": false,
-  "is_tree": false,
-  "is_child_table": true,
-  "allow_import": true,
-  "allow_export": true,
-  "track_changes": true,
-  "editable_grid": true,
-  "quick_entry": true,
-  "controller": "internal/core/doctype",
-  "naming_rule": "autoname",
+  "module": "Core",
+  "app_name": "gogal_studio",
+  "table_name": "tabDocField",
+  "autoname": "field:name",
+  "naming_rule": "By fieldname",
+  "title_field": "name",
   "sort_field": "idx",
   "sort_order": "ASC",
+  "document_type": "Core",
+  "is_single": false,
+  "is_submittable": false,
+  "is_child_table": true,
+  "is_tree": false,
+  "allow_import": true,
+  "allow_export": true,
+  "allow_rename": true,
+  "track_changes": true,
+  "quick_entry": false,
+  "editable_grid": true,
   "fields": [
     {
-      "fieldname": "doctype",
-      "label": "DocType",
+      "fieldname": "parent",
+      "label": "Parent DocType",
       "fieldtype": "Link",
       "options": "DocType",
-      "required": true,
+      "reqd": true,
+      "hidden": true,
+      "read_only": true,
       "in_list_view": true,
-      "idx": 1
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
+      "idx": 8
     },
     {
       "fieldname": "fieldname",
       "label": "Field Name",
       "fieldtype": "Data",
-      "required": true,
+      "reqd": true,
+      "hidden": false,
+      "read_only": false,
       "in_list_view": true,
-      "idx": 2
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
+      "idx": 9
     },
     {
       "fieldname": "label",
       "label": "Label",
       "fieldtype": "Data",
-      "required": true,
+      "reqd": true,
+      "hidden": false,
+      "read_only": false,
       "in_list_view": true,
-      "idx": 3
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
+      "idx": 10
     },
     {
       "fieldname": "fieldtype",
       "label": "Field Type",
       "fieldtype": "Select",
-      "options": "Data\nText\nSmall Text\nLong Text\nInt\nFloat\nCurrency\nCheck\nDate\nDatetime\nTime\nSelect\nLink\nDynamic Link\nTable\nTable MultiSelect\nAttach\nAttach Image\nJSON\nCode\nHTML\nButton\nRead Only\nSection Break\nColumn Break\nTab Break",
-      "required": true,
+      "options": "Data\nText\nSmall Text\nLong Text\nInt\nFloat\nCurrency\nCheck\nDate\nDatetime\nSelect\nLink\nTable\nAttach\nJSON\nCode",
+      "reqd": true,
+      "hidden": false,
+      "read_only": false,
       "in_list_view": true,
-      "idx": 4
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
+      "idx": 11
     },
     {
       "fieldname": "options",
       "label": "Options",
       "fieldtype": "Small Text",
-      "idx": 5
+      "reqd": false,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": false,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 12,
+      "length": 0,
+      "precision_value": 0,
+      "idx": 12
     },
     {
-      "fieldname": "default_value",
-      "label": "Default",
-      "fieldtype": "Small Text",
-      "idx": 6
-    },
-    {
-      "fieldname": "description",
-      "label": "Description",
-      "fieldtype": "Small Text",
-      "idx": 7
-    },
-    {
-      "fieldname": "required",
+      "fieldname": "reqd",
       "label": "Required",
       "fieldtype": "Check",
-      "default": "0",
-      "idx": 8
-    },
-    {
-      "fieldname": "unique_field",
-      "label": "Unique",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 9
-    },
-    {
-      "fieldname": "read_only",
-      "label": "Read Only",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 10
+      "reqd": false,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": false,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 3,
+      "length": 0,
+      "precision_value": 0,
+      "idx": 13
     },
     {
       "fieldname": "hidden",
       "label": "Hidden",
       "fieldtype": "Check",
-      "default": "0",
-      "idx": 11
+      "reqd": false,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": false,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 3,
+      "length": 0,
+      "precision_value": 0,
+      "idx": 14
+    },
+    {
+      "fieldname": "read_only",
+      "label": "Read Only",
+      "fieldtype": "Check",
+      "reqd": false,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": false,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 3,
+      "length": 0,
+      "precision_value": 0,
+      "idx": 15
     },
     {
       "fieldname": "in_list_view",
       "label": "In List View",
       "fieldtype": "Check",
-      "default": "0",
-      "idx": 12
-    },
-    {
-      "fieldname": "in_standard_filter",
-      "label": "In Standard Filter",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 13
-    },
-    {
-      "fieldname": "in_filter",
-      "label": "In Filter",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 14
-    },
-    {
-      "fieldname": "in_global_search",
-      "label": "In Global Search",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 15
-    },
-    {
-      "fieldname": "search_index",
-      "label": "Search Index",
-      "fieldtype": "Check",
-      "default": "0",
+      "reqd": false,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": false,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 3,
+      "length": 0,
+      "precision_value": 0,
       "idx": 16
-    },
-    {
-      "fieldname": "idx",
-      "label": "Index",
-      "fieldtype": "Int",
-      "default": "0",
-      "idx": 17
-    },
-    {
-      "fieldname": "columns",
-      "label": "Columns",
-      "fieldtype": "Int",
-      "default": "0",
-      "idx": 18
-    },
-    {
-      "fieldname": "length",
-      "label": "Length",
-      "fieldtype": "Int",
-      "default": "0",
-      "idx": 19
-    },
-    {
-      "fieldname": "precision_value",
-      "label": "Precision",
-      "fieldtype": "Data",
-      "idx": 20
-    },
-    {
-      "fieldname": "depends_on",
-      "label": "Depends On",
-      "fieldtype": "Code",
-      "idx": 21
-    },
-    {
-      "fieldname": "mandatory_depends_on",
-      "label": "Mandatory Depends On",
-      "fieldtype": "Code",
-      "idx": 22
-    },
-    {
-      "fieldname": "read_only_depends_on",
-      "label": "Read Only Depends On",
-      "fieldtype": "Code",
-      "idx": 23
-    },
-    {
-      "fieldname": "fetch_from",
-      "label": "Fetch From",
-      "fieldtype": "Data",
-      "idx": 24
-    },
-    {
-      "fieldname": "fetch_if_empty",
-      "label": "Fetch If Empty",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 25
-    },
-    {
-      "fieldname": "permlevel",
-      "label": "Perm Level",
-      "fieldtype": "Int",
-      "default": "0",
-      "idx": 26
-    },
-    {
-      "fieldname": "allow_on_submit",
-      "label": "Allow On Submit",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 27
-    },
-    {
-      "fieldname": "allow_bulk_edit",
-      "label": "Allow Bulk Edit",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 28
-    },
-    {
-      "fieldname": "no_copy",
-      "label": "No Copy",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 29
-    },
-    {
-      "fieldname": "set_only_once",
-      "label": "Set Only Once",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 30
-    },
-    {
-      "fieldname": "is_virtual",
-      "label": "Is Virtual",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 31
-    },
-    {
-      "fieldname": "not_nullable",
-      "label": "Not Nullable",
-      "fieldtype": "Check",
-      "default": "0",
-      "idx": 32
-    },
-    {
-      "fieldname": "validation_rule",
-      "label": "Validation Rule",
-      "fieldtype": "Code",
-      "idx": 33
-    },
-    {
-      "fieldname": "link_filters",
-      "label": "Link Filters",
-      "fieldtype": "JSON",
-      "idx": 34
     }
   ],
-  "actions": [],
-  "links": [],
   "permissions": [
     {
       "role": "System Manager",
+      "permlevel": 0,
       "read": true,
       "write": true,
       "create": true,
       "delete": true,
-      "export": true,
-      "import": true,
-      "idx": 1
+      "submit": false,
+      "cancel": false,
+      "amend": false,
+      "idx": 5
     }
-  ],
-  "states": []
+  ]
 }

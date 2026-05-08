@@ -1,8 +1,8 @@
 {
   "name": "Test",
   "module": "Core",
+  "app_name": "gogal_studio",
   "label": "Test",
-  "table_name": "tab_test",
   "is_core": false,
   "is_single": false,
   "is_submittable": false,

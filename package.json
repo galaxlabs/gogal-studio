@@ -9,9 +9,9 @@
   "author": "galaxlabs <galaxylab2020@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "studio:build": "esbuild public/studio/src/main.js --bundle --format=esm --outfile=public/studio/dist/studio.js",
-    "studio:watch": "esbuild public/studio/src/main.js --bundle --format=esm --outfile=public/studio/dist/studio.js --watch",
-    "studio:prod": "esbuild public/studio/src/main.js --bundle --format=esm --minify --outfile=public/studio/dist/studio.js"
+    "studio:build": "esbuild public/studio/vue/main.js --bundle --format=esm --outfile=public/studio/dist/studio.js",
+    "studio:watch": "esbuild public/studio/vue/main.js --bundle --format=esm --outfile=public/studio/dist/studio.js --watch",
+    "studio:prod": "esbuild public/studio/vue/main.js --bundle --format=esm --minify --outfile=public/studio/dist/studio.js"
   },
   "devDependencies": {
     "esbuild": "^0.28.0"
@@ -25,5 +25,12 @@
   "bugs": {
     "url": "https://github.com/galaxlabs/gogal-studio/issues"
   },
-  "homepage": "https://github.com/galaxlabs/gogal-studio#readme"
+  "homepage": "https://github.com/galaxlabs/gogal-studio#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "bootstrap": "^5.3.8",
+    "jquery": "^4.0.0",
+    "tailwindcss": "^4.2.4",
+    "vue": "^3.5.34"
+  }
 }

@@ -1,8 +1,8 @@
 {
   "name": "ABC",
   "module": "Selling",
+  "app_name": "gogal_studio",
   "label": "ABC",
-  "table_name": "tab_abc",
   "is_core": false,
   "is_single": false,
   "is_submittable": false,

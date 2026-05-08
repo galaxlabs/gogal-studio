@@ -4,98 +4,15 @@
   <meta charset="utf-8" />
   <title>Gogal Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="/vendor/tailwind/tailwind.js"></script>
+  <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="/studio-assets/styles.css" />
 </head>
 <body>
-  <div class="studio-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-logo">G</div>
-        <div>
-          <h1>Gogal Studio</h1>
-          <p>by Galaxy Labs</p>
-        </div>
-      </div>
+  <div id="gogalStudioApp"></div>
 
-      <button id="refreshBtn" class="primary-btn">Refresh</button>
-      <button id="newDocTypeBtn" class="primary-btn">+ New DocType</button>
-
-      <div class="section-title">DocTypes</div>
-      <div id="doctypeList" class="doctype-list">Loading...</div>
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <h2 id="pageTitle">Core Metadata</h2>
-          <p id="pageSubtitle">Select a DocType from the left side.</p>
-        </div>
-        <span id="statusPill" class="status-pill">Ready</span>
-        
-      </header>
-
-      <section class="summary-grid">
-        <div class="summary-card">
-          <span>Apps</span>
-          <strong id="appCount">0</strong>
-        </div>
-        <div class="summary-card">
-          <span>Modules</span>
-          <strong id="moduleCount">0</strong>
-        </div>
-        <div class="summary-card">
-          <span>DocTypes</span>
-          <strong id="doctypeCount">0</strong>
-        </div>
-        <div class="summary-card">
-          <span>Fields</span>
-          <strong id="fieldCount">0</strong>
-        </div>
-        <div class="summary-card">
-          <span>Permissions</span>
-          <strong id="permCount">0</strong>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-header">
-          <h3>DocType Details</h3>
-        </div>
-        <div id="detailsPanel" class="panel-body muted">
-          No DocType selected.
-        </div>
-      </section>
-
-      <section class="grid-two">
-        <section class="panel">
-          <div class="panel-header">
-            <h3>Fields</h3>
-          </div>
-          <div id="fieldsPanel" class="panel-body muted">
-            No fields loaded.
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-header">
-            <h3>Permissions</h3>
-          </div>
-          <div id="permsPanel" class="panel-body muted">
-            No permissions loaded.
-          </div>
-        </section>
-        <section class="panel">
-  <div class="panel-header">
-    <h3>Dynamic Form Preview</h3>
-  </div>
-  <div id="formPreviewPanel" class="panel-body muted">
-    Select a DocType to preview generated form.
-  </div>
-</section>
-      </section>
-    </main>
-  </div>
-
-<script type="module" src="/studio-assets/dist/studio.js"></script>
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/studio-assets/dist/studio.js"></script>
 </body>
 </html>

@@ -21,7 +21,11 @@ Thumbs.db
 # Build
 dist/
 build/
-
+diagnostic.md
 # Local database/files
 data/
 tmp/
+node_modules/
+gogal_studio_roadmap_v2_current_status.md
+
+.log

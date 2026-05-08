@@ -1,0 +1,8 @@
+/* E:\dev\gogal-studio\public\studio\src\input.css */
+@import "tailwindcss";
+
+@theme {
+  /* Add your custom Frappe-like branding here */
+  --color-brand-blue: #171717; 
+  --color-frappe-gray: #f4f5f6;
+}

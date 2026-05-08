@@ -1,114 +1,80 @@
 {
   "name": "Module Def",
-  "module": "Core",
   "label": "Module Def",
-  "table_name": "core_module_def",
-  "is_core": true,
+  "module": "Core",
+  "app_name": "gogal_studio",
+  "table_name": "tabModule Def",
+  "autoname": "field:name",
+  "naming_rule": "By fieldname",
+  "title_field": "name",
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "document_type": "Core",
   "is_single": false,
   "is_submittable": false,
-  "is_tree": false,
   "is_child_table": false,
+  "is_tree": false,
   "allow_import": true,
   "allow_export": true,
+  "allow_rename": true,
   "track_changes": true,
-  "editable_grid": false,
-  "quick_entry": true,
-  "controller": "internal/core/module",
-  "naming_rule": "field:name",
-  "title_field": "label",
-  "sort_field": "sort_order",
-  "sort_order": "ASC",
+  "quick_entry": false,
+  "editable_grid": true,
   "fields": [
     {
-      "fieldname": "name",
-      "label": "Name",
+      "fieldname": "module_name",
+      "label": "Module Name",
       "fieldtype": "Data",
-      "required": true,
-      "unique": true,
+      "reqd": true,
+      "hidden": false,
+      "read_only": false,
       "in_list_view": true,
-      "idx": 1
-    },
-    {
-      "fieldname": "label",
-      "label": "Label",
-      "fieldtype": "Data",
-      "required": true,
-      "in_list_view": true,
-      "idx": 2
-    },
-    {
-      "fieldname": "description",
-      "label": "Description",
-      "fieldtype": "Small Text",
-      "idx": 3
-    },
-    {
-      "fieldname": "enabled",
-      "label": "Enabled",
-      "fieldtype": "Check",
-      "default": "1",
-      "in_list_view": true,
-      "idx": 4
-    },
-    {
-      "fieldname": "is_core",
-      "label": "Is Core",
-      "fieldtype": "Check",
-      "default": "0",
-      "in_list_view": true,
-      "idx": 5
-    },
-    {
-      "fieldname": "version",
-      "label": "Version",
-      "fieldtype": "Data",
-      "default": "0.0.1",
-      "idx": 6
-    },
-    {
-      "fieldname": "icon",
-      "label": "Icon",
-      "fieldtype": "Data",
-      "idx": 7
-    },
-    {
-      "fieldname": "color",
-      "label": "Color",
-      "fieldtype": "Data",
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
       "idx": 8
     },
     {
-      "fieldname": "sort_order",
-      "label": "Sort Order",
-      "fieldtype": "Int",
-      "default": "0",
+      "fieldname": "app_name",
+      "label": "App Name",
+      "fieldtype": "Link",
+      "options": "Installed App",
+      "reqd": true,
+      "hidden": false,
+      "read_only": false,
+      "in_list_view": true,
+      "in_standard_filter": false,
+      "search_index": false,
+      "unique_field": false,
+      "no_copy": false,
+      "set_only_once": false,
+      "allow_on_submit": false,
+      "permlevel": 0,
+      "columns": 6,
+      "length": 140,
+      "precision_value": 0,
       "idx": 9
     }
   ],
-  "actions": [
-    {
-      "action_name": "reload_module",
-      "label": "Reload Module",
-      "action_type": "server",
-      "handler": "core.module.reload",
-      "method": "POST",
-      "permission": "System Manager",
-      "enabled": true,
-      "idx": 1
-    }
-  ],
-  "links": [],
   "permissions": [
     {
       "role": "System Manager",
+      "permlevel": 0,
       "read": true,
       "write": true,
       "create": true,
       "delete": true,
-      "export": true,
-      "import": true,
-      "idx": 1
+      "submit": false,
+      "cancel": false,
+      "amend": false,
+      "idx": 3
     }
-  ],
-  "states": []
+  ]
 }

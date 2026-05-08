@@ -1,8 +1,8 @@
 {
   "name": "DocType Action",
   "module": "Core",
+  "app_name": "gogal_studio",
   "label": "DocType Action",
-  "table_name": "core_doctype_action",
   "is_core": true,
   "is_single": false,
   "is_submittable": false,

@@ -22,4 +22,11 @@ func init() {
 	rootCmd.AddCommand(NewLifecycleCommand())
 	rootCmd.AddCommand(NewFieldTypeCommand())
 	rootCmd.AddCommand(NewSlugCommand())
+	rootCmd.AddCommand(NewDocTypeCommand())
+	rootCmd.AddCommand(NewPermissionCommand())
+	rootCmd.AddCommand(NewMetaCommand())
+	rootCmd.AddCommand(NewMigrateCommand())
+	rootCmd.AddCommand(NewDBCommand())
+	rootCmd.AddCommand(NewConfigCommand())
+	rootCmd.AddCommand(NewSiteCommand())
 }
