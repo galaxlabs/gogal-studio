@@ -1,0 +1,9 @@
+# CODEOWNERS file for gogal-studio
+# Specify GitHub usernames or teams who must review changes.
+# Replace <username-or-team> with your org/team or username (e.g. @galaxlabs or @org/team-name)
+
+# All files in the repository are owned by the listed owners
+* @<username-or-team>
+
+# Example: require review from the org owners
+# * @galaxlabs
